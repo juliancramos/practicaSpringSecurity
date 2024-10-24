@@ -5,9 +5,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 public class SecurityConfig {
 
+//    //Configuration 1
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 //        return httpSecurity
@@ -21,18 +24,44 @@ public class SecurityConfig {
 //
 //
 //    }
+//
+//    //Para version de SpringBoot 6
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/v1/index2").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(form -> form
+//                        .permitAll()
+//                )
+//                .build();
+//    }
 
-    //Para version de SpringBoot 6
+    //Configuration 2
+//    @Bean
+//    public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity
+//                .authorizeHttpRequests( auth -> {
+//                    auth.requestMatchers("/v1/index2").permitAll();
+//                })
+//                .formLogin().permitAll()
+//                .and()
+//                .build();
+//    }
+
+    //Para version 6.1
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests(auth -> auth
+                        // Permitir acceso sin autenticación a la ruta específica
                         .requestMatchers("/v1/index2").permitAll()
+                        // Indicar que cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .permitAll()
-                )
+                .formLogin(withDefaults())  // Configuración predeterminada para el formulario de login
                 .build();
     }
 
